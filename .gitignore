@@ -1,3 +1,4 @@
 /twitter_login.R
 **/*.ini
 **/*.pyc
+**/*.Rhistory
