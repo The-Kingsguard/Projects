@@ -2,11 +2,11 @@ library(rvest)
 # SEC website which lists the SIC codes
 x <- read_html('https://www.sec.gov/info/edgar/siccodes.htm')
 x <- html_table(x, fill = T)
-x <- x[[3]]
+x <- x[[4]]
 # Cleaning up the table - removing blank rows and columns
-rm_rows <- c(1:9,449)
-keep_cols <- c(1,2,4)
-x <- x[-rm_rows,keep_cols]
+rm_rows <- c(1:3)
+rm_cols <- c(3)
+x <- x[-rm_rows,-rm_cols]
 colnames(x) <- c('SIC_Code','AD_Office','Industry_name')
 # Now we have a table of the SIC codes, we'll iterate through the SIC codes and
 # look up companies matching those codes
@@ -20,7 +20,7 @@ for (i in x$SIC_Code) {
         result_number <- 100
         # This url is a search on Edgar for all companies matching the current 
         # SIC code
-        sic_url <- paste0(base_url, i)
+        sic_url <- paste0(base_url, x$SIC_Code[i])
         # Empty data frame to store the results for each SIC, which will
         # then be merged into the overall data frame
         temp <- data.frame()

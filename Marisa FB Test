@@ -1,0 +1,47 @@
+install.packages('rvest')
+library(rvest)
+x <- read_html('https://govtrequests.facebook.com/country/United%20States/2016-H1/#')
+x <- html_table(x, fill = T)
+
+# create separate tables from scraped data
+a <- x[[1]]
+b <- x[[2]]
+c <- x[[3]]
+d <- x[[4]]
+
+# refine tables
+# begin with a
+rm_cols <- c(1)
+rm_rows <- c(1)
+a <- a[-rm_cols,-rm_rows]
+colnames(a) <- c('Total_Requests','Accounts_Requested','%_Requests_Data_Produced')
+rownames(a) <- c('Total')
+View(a)
+
+# onto b
+rm_cols <- c(1)
+rm_rows <- c(1)
+b <- b[-rm_cols,-rm_rows]
+colnames(b) <- c('Total_Requests','Accounts_Requested','%_Requests_Data_Produced')
+rownames(b) <- c('Court_Order_Other','Court_Order_18_USC_2703d','Emergency_Disclosures',
+                 'Trap_Trace','Search_Warrant','Subpoena','TitleIII')
+View(b)
+
+# onto c
+rm_cols <- c(1)
+rm_rows <- c(1)
+c <- c[-rm_cols, -rm_rows]
+colnames(c) <- c('Total_Requests','Accounts_Requested')
+rownames(c) <- c('National Security Letters')
+View (c)
+
+# onto d - NOT WORKING
+# another way to remove row
+d <- d[-c(1),]
+colnames(d) <- c('Preservation_Requests','Accounts_Requested')
+View(d)
+
+# merge data frames a and b
+Requests <- rbind(b,a)
+View(Requests)
+save(Requests, file = 'Requests.Rda')
